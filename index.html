@@ -7,5 +7,30 @@
     <h1>Welcome to My Music Site</h1>
     <p>Check out my tracks below.</p>
     <!-- You'll add your music player here -->
+    <div id="player">
+  <audio controls id="audioPlayer">
+    Your browser does not support the audio element.
+  </audio>
+  <ul id="playlist">
+    <li song="music/track1.mp3">Track 1</li>
+    <li song="music/track2.mp3">Track 2</li>
+    <!-- Add more tracks here -->
+  </ul>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var player = document.getElementById('audioPlayer');
+    var playlist = document.getElementById('playlist');
+    var tracks = playlist.getElementsByTagName('li');
+    for (var i = 0; i < tracks.length; i++) {
+      var track = tracks[i];
+      track.onclick = function() {
+        player.src = this.getAttribute('song');
+        player.play();
+      }
+    }
+  });
+</script>
 </body>
 </html>
