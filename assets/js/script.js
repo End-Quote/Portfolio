@@ -168,20 +168,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
     navigationLinks.forEach((link) => {
       link.addEventListener("click", function () {
-        // Assuming data-nav-link values match the IDs or data-page attributes
         const targetPage = this.getAttribute('data-nav-link');
 
-        // Hide all sections
+        // First, deactivate all sections
         document.querySelectorAll("[data-page]").forEach(page => {
           page.classList.remove("active");
-          page.innerHTML = ''; // Optionally clear content if it should not remain
+          // Optionally clear content of non-active sections
+          // page.innerHTML = ''; 
         });
 
-        // Special handling for dynamically loaded content like 'sound-design'
+        // Activate the clicked section
+        // Check if the section needs dynamic content loading
         if (targetPage === 'sound_design') {
-          loadContent('./pages/sound_design.html', 'sound_design');
+          // Ensure the container is empty before loading new content
+          const container = document.getElementById(targetPage);
+          if(container.innerHTML.trim() === '') {
+            loadContent('./pages/sound_design.html', targetPage);
+          } else {
+            // Content already loaded, just make it active
+            container.classList.add("active");
+          }
         } else {
-          // Handle other pages, which might just need to be shown
+          // For static content that's already in the DOM
           const activePage = document.querySelector(`[data-page="${targetPage}"]`);
           if (activePage) {
             activePage.classList.add("active");
@@ -197,7 +205,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   };
 
-  // Load content dynamically into the specified container
   const loadContent = (url, containerId) => {
     fetch(url)
       .then(response => response.text())
@@ -206,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (container) {
           container.innerHTML = html;
           container.classList.add("active"); // Mark the container as active
+          // Call any scripts to reinitialize event listeners on the loaded content
         }
       })
       .catch(error => {
@@ -214,7 +222,4 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   attachNavigationEventListeners();
-
-  // Initially hide all sections or load default content as needed
-  // Example: loadContent('./pages/about.html', 'about');
 });
