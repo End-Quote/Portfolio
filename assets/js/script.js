@@ -184,32 +184,29 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   const attachNavigationEventListeners = () => {
-      const navigationLinks = document.querySelectorAll("[data-nav-link]");
-      console.log(`Found ${navigationLinks.length} navigation links for attaching events.`);
-      
-      const pages = document.querySelectorAll("[data-page]");
-      console.log(`Found ${pages.length} pages for navigation.`);
-
-      navigationLinks.forEach((link) => {
-          link.addEventListener("click", function () {
-              console.log(`Navigation link clicked: ${this.innerHTML}`);
-              pages.forEach(page => page.classList.remove("active"));
-              navigationLinks.forEach(navLink => navLink.classList.remove("active"));
-              this.classList.add("active");
-              
-              const pageId = this.innerHTML.toLowerCase().replace(/\s+/g, '_'); // Assuming pageId needs formatting to match data-page attributes
-              console.log(`Looking for a page with data-page="${pageId}" to activate.`);
-              const activePage = document.querySelector(`[data-page="${pageId}"]`);
-              if (activePage) {
-                  console.log(`Activating page: ${pageId}`);
-                  activePage.classList.add("active");
-              } else {
-                  console.error(`No page found with data-page="${pageId}"`);
-              }
-
-              window.scrollTo(0, 0);
-          });
+    const navigationLinks = document.querySelectorAll("[data-nav-link]");
+    
+    navigationLinks.forEach((link) => {
+      link.addEventListener("click", function () {
+        // Remove 'active' class from all sections/pages
+        document.querySelectorAll("[data-page]").forEach(page => page.classList.remove("active"));
+        // Remove 'active' class from all navigation links
+        navigationLinks.forEach(navLink => navLink.classList.remove("active"));
+        
+        // Set clicked link as 'active'
+        this.classList.add("active");
+        
+        const pageId = this.getAttribute('data-nav-link').toLowerCase(); // Assuming your links have data-nav-link attributes corresponding to page IDs
+        const activePage = document.querySelector(`[data-page="${pageId}"]`);
+        if (activePage) {
+          activePage.classList.add("active");
+        } else {
+          console.error(`No page found with data-page="${pageId}"`);
+        }
+  
+        window.scrollTo(0, 0);
       });
+    });
   };
 
   attachNavigationEventListeners();
