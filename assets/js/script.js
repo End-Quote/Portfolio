@@ -165,31 +165,46 @@ navigationLinks.forEach((link) => {
 
 document.addEventListener('DOMContentLoaded', function() {
   const loadContent = (url, containerId) => {
+      console.log(`Attempting to load content from ${url} into #${containerId}`);
       fetch(url)
           .then(response => response.text())
           .then(html => {
-              document.getElementById(containerId).innerHTML = html;
-              attachNavigationEventListeners();
+              const container = document.getElementById(containerId);
+              if(container) {
+                  console.log(`Successfully fetched content. Updating #${containerId}`);
+                  container.innerHTML = html;
+                  attachNavigationEventListeners();
+              } else {
+                  console.error(`Failed to find element with id #${containerId}`);
+              }
           })
           .catch(error => {
-              console.warn('Error loading the page:', error);
+              console.error('Error loading the page:', error);
           });
   };
 
   const attachNavigationEventListeners = () => {
       const navigationLinks = document.querySelectorAll("[data-nav-link]");
+      console.log(`Found ${navigationLinks.length} navigation links for attaching events.`);
+      
       const pages = document.querySelectorAll("[data-page]");
+      console.log(`Found ${pages.length} pages for navigation.`);
 
       navigationLinks.forEach((link) => {
           link.addEventListener("click", function () {
+              console.log(`Navigation link clicked: ${this.innerHTML}`);
               pages.forEach(page => page.classList.remove("active"));
               navigationLinks.forEach(navLink => navLink.classList.remove("active"));
               this.classList.add("active");
               
-              const pageId = this.innerHTML.toLowerCase();
+              const pageId = this.innerHTML.toLowerCase().replace(/\s+/g, '_'); // Assuming pageId needs formatting to match data-page attributes
+              console.log(`Looking for a page with data-page="${pageId}" to activate.`);
               const activePage = document.querySelector(`[data-page="${pageId}"]`);
               if (activePage) {
+                  console.log(`Activating page: ${pageId}`);
                   activePage.classList.add("active");
+              } else {
+                  console.error(`No page found with data-page="${pageId}"`);
               }
 
               window.scrollTo(0, 0);
@@ -200,6 +215,6 @@ document.addEventListener('DOMContentLoaded', function() {
   attachNavigationEventListeners();
 
   // Example usage: load 'sound_design.html' content into '#sound_design' div
-  // Call this function based on specific conditions or events, such as clicking a navbar item
-  loadContent( './pages/sound_design.html', 'sound_design' );
+  // Adjust the ID to match your actual container ID if 'sound_design' is not correct
+  loadContent('./pages/sound_design.html', 'sound_design');
 });
