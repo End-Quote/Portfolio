@@ -168,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(navigationLinks);
     
     navigationLinks.forEach((link) => {
+      console.log("targetPage");
       link.addEventListener("click", function () {
         const targetPage = this.getAttribute('data-page');
         console.log(targetPage);
