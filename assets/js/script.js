@@ -165,7 +165,7 @@ navigationLinks.forEach((link) => {
 document.addEventListener('DOMContentLoaded', function() {
   const attachNavigationEventListeners = () => {
     const navigationLinks = document.querySelectorAll("[data-nav-link]");
-
+    console.log(`Activating`);
     navigationLinks.forEach((link) => {
       link.addEventListener("click", function () {
         const targetPage = this.getAttribute('data-nav-link');
