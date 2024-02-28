@@ -169,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
           .then(response => response.text())
           .then(html => {
               document.getElementById(containerId).innerHTML = html;
-              // Reattach event listeners or reinitialize scripts here
               attachNavigationEventListeners();
           })
           .catch(error => {
@@ -198,10 +197,9 @@ document.addEventListener('DOMContentLoaded', function() {
       });
   };
 
-  // Initial call to set up event listeners
   attachNavigationEventListeners();
 
   // Example usage: load 'sound_design.html' content into '#sound_design' div
   // Call this function based on specific conditions or events, such as clicking a navbar item
-  loadContent('./pages/sound_design.html', 'sound_design');
+  loadContent( './pages/sound_design.html', 'sound_design' );
 });
