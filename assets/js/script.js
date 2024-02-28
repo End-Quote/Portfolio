@@ -165,44 +165,50 @@ navigationLinks.forEach((link) => {
 
 document.addEventListener('DOMContentLoaded', function() {
   const loadContent = (url, containerId) => {
-      console.log(`Attempting to load content from ${url} into #${containerId}`);
-      fetch(url)
-          .then(response => response.text())
-          .then(html => {
-              const container = document.getElementById(containerId);
-              if(container) {
-                  console.log(`Successfully fetched content. Updating #${containerId}`);
-                  container.innerHTML = html;
-                  attachNavigationEventListeners();
-              } else {
-                  console.error(`Failed to find element with id #${containerId}`);
-              }
-          })
-          .catch(error => {
-              console.error('Error loading the page:', error);
-          });
-  };
+    console.log(`Attempting to load content from ${url} into #${containerId}`);
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            const container = document.getElementById(containerId);
+            if(container) {
+                console.log(`Successfully fetched content. Updating #${containerId}`);
+                // Directly setting innerHTML; ensure your container has `data-page`
+                container.innerHTML = html;
+                attachNavigationEventListeners();
+            } else {
+                console.error(`Failed to find element with id #${containerId}`);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading the page:', error);
+        });
+};
 
   const attachNavigationEventListeners = () => {
     const navigationLinks = document.querySelectorAll("[data-nav-link]");
-    
+  
     navigationLinks.forEach((link) => {
       link.addEventListener("click", function () {
+        const currentPageId = this.getAttribute('data-nav-link'); // Assuming the link knows which page it corresponds to
+  
         // Remove 'active' class from all sections/pages
-        document.querySelectorAll("[data-page]").forEach(page => page.classList.remove("active"));
-        // Remove 'active' class from all navigation links
-        navigationLinks.forEach(navLink => navLink.classList.remove("active"));
-        
-        // Set clicked link as 'active'
-        this.classList.add("active");
-        
-        const pageId = this.getAttribute('data-nav-link').toLowerCase(); // Assuming your links have data-nav-link attributes corresponding to page IDs
-        const activePage = document.querySelector(`[data-page="${pageId}"]`);
+        document.querySelectorAll("[data-page]").forEach(page => {
+          page.classList.remove("active");
+        });
+  
+        // Activate the corresponding page
+        const activePage = document.querySelector(`[data-page="${currentPageId}"]`);
         if (activePage) {
           activePage.classList.add("active");
         } else {
-          console.error(`No page found with data-page="${pageId}"`);
+          // If no active page found, it might be a dynamically loaded content scenario
+          console.log(`Attempting to load content for ${currentPageId}`);
+          loadContent(`./pages/${currentPageId}.html`, currentPageId);
         }
+  
+        // Update navigation link states
+        navigationLinks.forEach(navLink => navLink.classList.remove("active"));
+        this.classList.add("active");
   
         window.scrollTo(0, 0);
       });
