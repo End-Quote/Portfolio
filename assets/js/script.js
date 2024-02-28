@@ -141,19 +141,35 @@ const navigationLinks = document.querySelectorAll("[data-nav-link]");
 const pages = document.querySelectorAll("[data-page]");
 
 // add event to all nav link
-for (let i = 0; i < navigationLinks.length; i++) {
-  navigationLinks[i].addEventListener("click", function () {
+navigationLinks.forEach((link) => {
+  link.addEventListener("click", function () {
+    // Remove active class from all pages and links
+    pages.forEach(page => page.classList.remove("active"));
+    navigationLinks.forEach(navLink => navLink.classList.remove("active"));
 
-    for (let i = 0; i < pages.length; i++) {
-      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
-        pages[i].classList.add("active");
-        navigationLinks[i].classList.add("active");
-        window.scrollTo(0, 0);
-      } else {
-        pages[i].classList.remove("active");
-        navigationLinks[i].classList.remove("active");
-      }
+    // Add active class to clicked link
+    this.classList.add("active");
+    
+    // Add active class to corresponding page
+    const pageId = this.innerHTML.toLowerCase();
+    const activePage = document.querySelector(`[data-page="${pageId}"]`);
+    if (activePage) {
+      activePage.classList.add("active");
     }
 
+    // Scroll to top of the page or to a specific section
+    window.scrollTo(0, 0);
   });
-}
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+  fetch('./pages/sound_design.html')
+      .then(response => response.text())
+      .then(html => {
+          document.getElementById('sound_design').innerHTML = html;
+      })
+      .catch(error => {
+          console.warn('Error loading the sound design page:', error);
+      });
+});
