@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     navigationLinks.forEach((link) => {
       link.addEventListener("click", function () {
-        const targetPage = this.getAttribute('data-nav-link');
+        const targetPage = this.getAttribute('data-page');
         console.log(targetPage);
         // First, deactivate all sections
         document.querySelectorAll("[data-page]").forEach(page => {
