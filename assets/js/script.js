@@ -203,5 +203,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Example usage: load 'sound_design.html' content into '#sound_design' div
   // Call this function based on specific conditions or events, such as clicking a navbar item
-  // loadContent('pages/sound_design.html', 'sound_design');
+  loadContent('./pages/sound_design.html', 'sound_design');
 });
