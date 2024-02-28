@@ -183,9 +183,11 @@ document.addEventListener('DOMContentLoaded', function() {
           // Ensure the container is empty before loading new content
           const container = document.getElementById(targetPage);
           if(container.innerHTML.trim() === '') {
+            console.log(`Activating section: ${targetPage}`);
             loadContent('./pages/sound_design.html', targetPage);
           } else {
             // Content already loaded, just make it active
+            console.log(`Activating section: ${targetPage}`);
             container.classList.add("active");
           }
         } else {
