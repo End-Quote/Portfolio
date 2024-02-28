@@ -854,6 +854,14 @@ main {
   margin-bottom: 8px;
 }
 
+[data-page] {
+  display: none; /* Hide all sections by default */
+}
+
+[data-page].active {
+  display: block; /* Only the active section is shown */
+}
+
 .skill .title-wrapper data {
   color: var(--light-gray);
   font-size: var(--fs-7);
