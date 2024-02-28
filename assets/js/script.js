@@ -164,12 +164,44 @@ navigationLinks.forEach((link) => {
 
 
 document.addEventListener('DOMContentLoaded', function() {
-  fetch('./pages/sound_design.html')
-      .then(response => response.text())
-      .then(html => {
-          document.getElementById('sound_design').innerHTML = html;
-      })
-      .catch(error => {
-          console.warn('Error loading the sound design page:', error);
+  const loadContent = (url, containerId) => {
+      fetch(url)
+          .then(response => response.text())
+          .then(html => {
+              document.getElementById(containerId).innerHTML = html;
+              // Reattach event listeners or reinitialize scripts here
+              attachNavigationEventListeners();
+          })
+          .catch(error => {
+              console.warn('Error loading the page:', error);
+          });
+  };
+
+  const attachNavigationEventListeners = () => {
+      const navigationLinks = document.querySelectorAll("[data-nav-link]");
+      const pages = document.querySelectorAll("[data-page]");
+
+      navigationLinks.forEach((link) => {
+          link.addEventListener("click", function () {
+              pages.forEach(page => page.classList.remove("active"));
+              navigationLinks.forEach(navLink => navLink.classList.remove("active"));
+              this.classList.add("active");
+              
+              const pageId = this.innerHTML.toLowerCase();
+              const activePage = document.querySelector(`[data-page="${pageId}"]`);
+              if (activePage) {
+                  activePage.classList.add("active");
+              }
+
+              window.scrollTo(0, 0);
+          });
       });
+  };
+
+  // Initial call to set up event listeners
+  attachNavigationEventListeners();
+
+  // Example usage: load 'sound_design.html' content into '#sound_design' div
+  // Call this function based on specific conditions or events, such as clicking a navbar item
+  // loadContent('pages/sound_design.html', 'sound_design');
 });
