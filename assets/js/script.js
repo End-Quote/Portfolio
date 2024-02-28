@@ -162,62 +162,59 @@ navigationLinks.forEach((link) => {
   });
 });
 
-
 document.addEventListener('DOMContentLoaded', function() {
-  const loadContent = (url, containerId) => {
-    console.log(`Attempting to load content from ${url} into #${containerId}`);
-    fetch(url)
-        .then(response => response.text())
-        .then(html => {
-            const container = document.getElementById(containerId);
-            if(container) {
-                console.log(`Successfully fetched content. Updating #${containerId}`);
-                // Directly setting innerHTML; ensure your container has `data-page`
-                container.innerHTML = html;
-                attachNavigationEventListeners();
-            } else {
-                console.error(`Failed to find element with id #${containerId}`);
-            }
-        })
-        .catch(error => {
-            console.error('Error loading the page:', error);
-        });
-};
-
   const attachNavigationEventListeners = () => {
     const navigationLinks = document.querySelectorAll("[data-nav-link]");
-  
+
     navigationLinks.forEach((link) => {
       link.addEventListener("click", function () {
-        const currentPageId = this.getAttribute('data-nav-link'); // Assuming the link knows which page it corresponds to
-  
-        // Remove 'active' class from all sections/pages
+        // Assuming data-nav-link values match the IDs or data-page attributes
+        const targetPage = this.getAttribute('data-nav-link');
+
+        // Hide all sections
         document.querySelectorAll("[data-page]").forEach(page => {
           page.classList.remove("active");
+          page.innerHTML = ''; // Optionally clear content if it should not remain
         });
-  
-        // Activate the corresponding page
-        const activePage = document.querySelector(`[data-page="${currentPageId}"]`);
-        if (activePage) {
-          activePage.classList.add("active");
+
+        // Special handling for dynamically loaded content like 'sound-design'
+        if (targetPage === 'sound_design') {
+          loadContent('./pages/sound_design.html', 'sound_design');
         } else {
-          // If no active page found, it might be a dynamically loaded content scenario
-          console.log(`Attempting to load content for ${currentPageId}`);
-          loadContent(`./pages/${currentPageId}.html`, currentPageId);
+          // Handle other pages, which might just need to be shown
+          const activePage = document.querySelector(`[data-page="${targetPage}"]`);
+          if (activePage) {
+            activePage.classList.add("active");
+          }
         }
-  
+
         // Update navigation link states
         navigationLinks.forEach(navLink => navLink.classList.remove("active"));
         this.classList.add("active");
-  
+
         window.scrollTo(0, 0);
       });
     });
   };
 
+  // Load content dynamically into the specified container
+  const loadContent = (url, containerId) => {
+    fetch(url)
+      .then(response => response.text())
+      .then(html => {
+        const container = document.getElementById(containerId);
+        if (container) {
+          container.innerHTML = html;
+          container.classList.add("active"); // Mark the container as active
+        }
+      })
+      .catch(error => {
+        console.error('Error loading the page:', error);
+      });
+  };
+
   attachNavigationEventListeners();
 
-  // Example usage: load 'sound_design.html' content into '#sound_design' div
-  // Adjust the ID to match your actual container ID if 'sound_design' is not correct
-  loadContent('./pages/sound_design.html', 'sound_design');
+  // Initially hide all sections or load default content as needed
+  // Example: loadContent('./pages/about.html', 'about');
 });
