@@ -166,11 +166,11 @@ document.addEventListener('DOMContentLoaded', function() {
   const attachNavigationEventListeners = () => {
     const navigationLinks = document.querySelectorAll("[data-page]");
     console.log(navigationLinks);
-    console.log(`Activating`);
+    
     navigationLinks.forEach((link) => {
       link.addEventListener("click", function () {
         const targetPage = this.getAttribute('data-nav-link');
-
+        console.log(targetPage);
         // First, deactivate all sections
         document.querySelectorAll("[data-page]").forEach(page => {
           page.classList.remove("active");
